@@ -15,6 +15,15 @@ main {
   margin: auto;
 }
 
+img {
+  width: 300px;
+  height: 200px;
+}
+
+.centered {
+  text-align: center;
+}
+
 .main-header {
   width: 100%;
   height: 3.5rem;
@@ -83,13 +92,13 @@ main {
 }
 
 .card__actions {
-    padding: 1rem;
-    text-align: center;
+  padding: 1rem;
+  text-align: center;
 }
 
 .card__actions button,
 .card__actions a {
-    margin: 0 0.25rem;
+  margin: 0 0.25rem;
 }
 
 .btn {

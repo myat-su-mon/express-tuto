@@ -1,1 +1,9 @@
-[{"title":"Anime 1","imageUrl":"https://i.pinimg.com/474x/f9/83/04/f983049c611758948c5feed2ba9a7559.jpg","description":"desc1","price":"12"}]
+[
+  {
+    "id": "12345",
+    "title": "Anime 1",
+    "imageUrl": "https://i.pinimg.com/474x/f9/83/04/f983049c611758948c5feed2ba9a7559.jpg",
+    "description": "desc1",
+    "price": "12"
+  }
+]
