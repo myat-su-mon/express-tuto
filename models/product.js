@@ -2,6 +2,8 @@ const fs = require("fs");
 const path = require("path");
 const Cart = require("./cart");
 
+const getDb = require("../util/database").getDb;
+
 const p = path.join(
   path.dirname(require.main.filename),
   "data",
