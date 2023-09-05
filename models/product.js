@@ -22,12 +22,13 @@ const getProductsFromFile = (cb) => {
 };
 
 module.exports = class Product {
-  constructor(title, imageUrl, description, price, id) {
+  constructor(title, imageUrl, description, price, id, userId) {
     this.title = title;
     this.imageUrl = imageUrl;
     this.description = description;
     this.price = price;
     this._id = id ? new mongodb.ObjectId(id) : null;
+    this.userId = new mongodb.ObjectId(userId);
   }
 
   save() {

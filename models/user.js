@@ -1,4 +1,4 @@
-const { ObjectId } = require("mongodb").ObjectId;
+const { ObjectId } = require("mongodb");
 const getDb = require("../util/database").getDb;
 
 class User {
