@@ -1,7 +1,7 @@
 const fs = require("fs");
 const path = require("path");
 const Cart = require("./cart");
-const { get } = require("http");
+const mongodb = require("mongodb");
 
 const getDb = require("../util/database").getDb;
 
@@ -22,8 +22,7 @@ const getProductsFromFile = (cb) => {
 };
 
 module.exports = class Product {
-  constructor(id, title, imageUrl, description, price) {
-    this.id = id;
+  constructor(title, imageUrl, description, price) {
     this.title = title;
     this.imageUrl = imageUrl;
     this.description = description;
@@ -52,11 +51,17 @@ module.exports = class Product {
       .catch((err) => console.log(err));
   }
 
-  static findById(id, cb) {
-    getProductsFromFile((products) => {
-      const product = products.find((p) => p.id === id);
-      cb(product);
-    });
+  static findById(prodId) {
+    const db = getDb();
+    return db
+      .collection("products")
+      .find({ _id: new mongodb.ObjectId(prodId) })
+      .next()
+      .then((product) => {
+        console.log(product);
+        return product;
+      })
+      .catch((err) => console.log(err));
   }
 
   static deleteById(id) {
