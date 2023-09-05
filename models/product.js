@@ -1,6 +1,5 @@
 const fs = require("fs");
 const path = require("path");
-const Cart = require("./cart");
 const mongodb = require("mongodb");
 
 const getDb = require("../util/database").getDb;
@@ -28,7 +27,7 @@ module.exports = class Product {
     this.description = description;
     this.price = price;
     this._id = id ? new mongodb.ObjectId(id) : null;
-    this.userId = new mongodb.ObjectId(userId);
+    this.userId = userId;
   }
 
   save() {
