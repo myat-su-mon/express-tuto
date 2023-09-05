@@ -1,6 +1,7 @@
 const fs = require("fs");
 const path = require("path");
 const Cart = require("./cart");
+const { get } = require("http");
 
 const getDb = require("../util/database").getDb;
 
@@ -38,8 +39,17 @@ module.exports = class Product {
       .catch((err) => console.log(err));
   }
 
-  static fetchAll(cb) {
-    getProductsFromFile(cb);
+  static fetchAll() {
+    const db = getDb();
+    return db
+      .collection("products")
+      .find()
+      .toArray()
+      .then((products) => {
+        console.log(products);
+        return products;
+      })
+      .catch((err) => console.log(err));
   }
 
   static findById(id, cb) {
