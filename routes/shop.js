@@ -7,9 +7,9 @@ const shopController = require("../controllers/shop");
 const router = express.Router();
 
 // normal route | specific route
-// router.get("/", shopController.getIndex);
+router.get("/", shopController.getIndex);
 
-// router.get("/products", shopController.getProducts);
+router.get("/products", shopController.getProducts);
 
 // // dynamic segment
 // router.get("/products/:productId", shopController.getProduct);
