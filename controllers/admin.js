@@ -1,6 +1,3 @@
-// const Product = require("../models/product");
-
-const product = require("../models/product");
 const Product = require("../models/product");
 
 exports.getAddProduct = (req, res, next) => {
@@ -13,7 +10,6 @@ exports.getAddProduct = (req, res, next) => {
 
 exports.postAddProduct = (req, res, next) => {
   const { title, imageUrl, description, price } = req.body;
-  console.log(req.user);
   const product = new Product({
     title: title,
     price: price,
