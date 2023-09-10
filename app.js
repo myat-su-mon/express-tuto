@@ -3,12 +3,21 @@ const express = require("express");
 const bodyParser = require("body-parser");
 const mongoose = require("mongoose");
 const session = require("express-session");
+const MongodbStore = require("connect-mongodb-session")(session);
 // const mongoConnect = require("./util/database").mongoConnect;
+
+const MONGODB_URI =
+  "mongodb+srv://root:root@cluster0.j30ddxo.mongodb.net/shop?retryWrites=true&w=majority";
 
 const errorController = require("./controllers/error");
 const User = require("./models/user");
 
 const app = express();
+const store = new MongodbStore({
+  uri: MONGODB_URI,
+  collection: "sessions",
+  // expires: 1000 * 60 * 60
+});
 
 app.set("view engine", "ejs");
 app.set("views", "views");
@@ -24,12 +33,16 @@ app.use(
     secret: "my secret",
     resave: false,
     saveUninitialized: false,
+    store: store,
     // cookie: {maxAge: 1000 * 60 * 60}
   })
 );
 
 app.use((req, res, next) => {
-  User.findById("64fabaf80a44d8fefd8b884f")
+  if (!req.session.user) {
+    return next();
+  }
+  User.findById(req.session.user._id)
     .then((user) => {
       req.user = user;
       next();
@@ -44,10 +57,7 @@ app.use(authRoutes);
 app.use(errorController.get404);
 
 mongoose
-  .connect(
-    "mongodb+srv://root:root@cluster0.j30ddxo.mongodb.net/shop?retryWrites=true&w=majority",
-    { useNewUrlParser: true, useUnifiedTopology: true }
-  )
+  .connect(MONGODB_URI, { useNewUrlParser: true, useUnifiedTopology: true })
   .then(() => {
     User.findOne().then((user) => {
       if (!user) {
