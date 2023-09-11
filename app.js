@@ -58,20 +58,7 @@ app.use(errorController.get404);
 
 mongoose
   .connect(MONGODB_URI, { useNewUrlParser: true, useUnifiedTopology: true })
-  .then(() => {
-    User.findOne().then((user) => {
-      if (!user) {
-        const user = new User({
-          name: "Aung",
-          email: "aung@gmail.com",
-          cart: {
-            items: [],
-          },
-        });
-        user.save();
-      }
-    });
-
+  .then((result) => {
     console.log("MongoDB is connected");
     app.listen(3000, () => console.log("server listening on port 3000"));
   })
