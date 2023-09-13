@@ -1,17 +1,34 @@
+const user = require("../models/user");
 const User = require("../models/user");
 const bcrypt = require("bcryptjs");
 
 exports.getLogin = (req, res, next) => {
+  let message = req.flash("error");
+  if (message.length > 0) {
+    message = message[0];
+  } else {
+    message = null;
+  }
   res.render("auth/login", {
     path: "/login",
     pageTitle: "Login",
+    isAuthenticated: false,
+    errorMessage: message,
   });
 };
 
 exports.getSignup = (req, res, next) => {
+  let message = req.flash("error");
+  if (message.length > 0) {
+    message = message[0];
+  } else {
+    message = null;
+  }
   res.render("auth/signup", {
     path: "/signup",
     pageTitle: "Signup",
+    isAuthenticated: false,
+    errorMessage: message,
   });
 };
 
@@ -55,15 +72,16 @@ exports.postSignup = (req, res, next) => {
   User.findOne({ email: email })
     .then((userDoc) => {
       if (userDoc) {
+        req.flash("error", "Email exists already, please pick a different one");
         return res.redirect("/signup");
       }
       bcrypt
         .hash(password, 12)
-        .then((hashedPassword) => {
+        .then((hasedPassword) => {
           const user = new User({
             email: email,
-            password: hashedPassword,
-            cart: { items: [] },
+            password: hasedPassword,
+            cart: { item: [] },
           });
           return user.save();
         })
@@ -71,10 +89,14 @@ exports.postSignup = (req, res, next) => {
           res.redirect("/login");
         });
     })
-    .catch((err) => console.log(err));
+    .catch((err) => {
+      console.log(err);
+    });
 };
 
 exports.postLogout = (req, res, next) => {
-  req.session.destroy((err) => console.log(err));
-  res.redirect("/");
+  req.session.destroy((err) => {
+    console.log(err);
+    res.redirect("/");
+  });
 };

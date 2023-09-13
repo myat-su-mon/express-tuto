@@ -7,6 +7,7 @@ const MongodbStore = require("connect-mongodb-session")(session);
 // const mongoConnect = require("./util/database").mongoConnect;
 const csrf = require("csurf");
 const csrfProtection = csrf();
+const flash = require("connect-flash");
 
 const MONGODB_URI =
   "mongodb+srv://root:root@cluster0.j30ddxo.mongodb.net/shop?retryWrites=true&w=majority";
@@ -41,6 +42,7 @@ app.use(
 );
 
 app.use(csrfProtection);
+app.use(flash());
 
 app.use((req, res, next) => {
   if (!req.session.user) {
