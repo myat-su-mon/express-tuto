@@ -93,10 +93,10 @@ exports.postSignup = (req, res, next) => {
 
   User.findOne({ email: email })
     .then((userDoc) => {
-      if (userDoc) {
-        req.flash("error", "Email exists already, please pick a different one");
-        return res.redirect("/signup");
-      }
+      // if (userDoc) {
+      //   req.flash("error", "Email exists already, please pick a different one");
+      //   return res.redirect("/signup");
+      // }
       bcrypt
         .hash(password, 12)
         .then((hasedPassword) => {
@@ -109,12 +109,12 @@ exports.postSignup = (req, res, next) => {
         })
         .then(() => {
           res.redirect("/login");
-          transporter.sendMail({
-            from: "sumon25399@gmail.com",
-            to: email,
-            subject: "Signup succeeded!",
-            html: "<h1>You Successfully Signed Up!</h1>",
-          });
+          // transporter.sendMail({
+          //   from: "sumon25399@gmail.com",
+          //   to: email,
+          //   subject: "Signup succeeded!",
+          //   html: "<h1>You Successfully Signed Up!</h1>",
+          // });
         });
     })
     .catch((err) => {
