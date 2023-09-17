@@ -8,7 +8,14 @@ const router = express.Router();
 
 router.get("/login", authController.getLogin);
 
-router.post("/login", authController.postLogin);
+router.post(
+  "/login",
+  [
+    body("email").isEmail().withMessage("Please enter a valid email address"),
+    body("password").isLength({ min: 6 }).isAlphanumeric(),
+  ],
+  authController.postLogin
+);
 
 router.get("/signup", authController.getSignup);
 
@@ -19,10 +26,10 @@ router.post(
       .isEmail()
       .withMessage("Please enter a valid email")
       .custom((value, { req }) => {
-        // if (value === "test@test.com") {
-        //   throw new Error("This email address is forbidden");
-        // }
-        // return true;
+        if (value === "test@test.com") {
+          throw new Error("This email address is forbidden");
+        }
+        return true;
         User.findOne({ email: value }).then((userDoc) => {
           if (userDoc) {
             return Promise.reject(
