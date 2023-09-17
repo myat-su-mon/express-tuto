@@ -25,6 +25,8 @@ exports.getLogin = (req, res, next) => {
     pageTitle: "Login",
     isAuthenticated: false,
     errorMessage: message,
+    oldInput: { email: "", password: "" },
+    validationErrors: [],
   });
 };
 
@@ -45,6 +47,7 @@ exports.getSignup = (req, res, next) => {
       password: "",
       confirmPassword: "",
     },
+    validationErrors: [],
   });
 };
 
@@ -52,18 +55,26 @@ exports.postLogin = (req, res, next) => {
   const email = req.body.email;
   const password = req.body.password;
   const errors = validationResult(req);
+
   if (!errors.isEmpty()) {
     return res.status(422).render("auth/login", {
       path: "/login",
       pageTitle: "Login",
       errorMessage: errors.array()[0].msg,
+      oldInput: { email: email, password: password },
+      validationErrors: errors.array(),
     });
   }
   User.findOne({ email: email })
     .then((user) => {
       if (!user) {
-        req.flash("error", "Invalid email or password");
-        return res.redirect("/login");
+        return res.status(422).render("auth/login", {
+          path: "/login",
+          pageTitle: "Login",
+          errorMessage: "Invalid email or password",
+          oldInput: { email: email, password: password },
+          validationErrors: [],
+        });
       }
       bcrypt
         .compare(password, user.password)
@@ -76,8 +87,13 @@ exports.postLogin = (req, res, next) => {
               res.redirect("/");
             });
           }
-          req.flash("error", "Invalid email or password");
-          res.redirect("/login");
+          return res.status(422).render("auth/login", {
+            path: "/login",
+            pageTitle: "Login",
+            errorMessage: "Invalid email or password.",
+            oldInput: { email: email, password: password },
+            validationErrors: [],
+          });
         })
         .catch((err) => {
           console.log(err);
@@ -106,37 +122,27 @@ exports.postSignup = (req, res, next) => {
         password: password,
         confirmPassword: confirmPassword,
       },
+      validationErrors: errors.array(),
     });
   }
-
-  User.findOne({ email: email })
-    .then((userDoc) => {
-      // if (userDoc) {
-      //   req.flash("error", "Email exists already, please pick a different one");
-      //   return res.redirect("/signup");
-      // }
-      bcrypt
-        .hash(password, 12)
-        .then((hasedPassword) => {
-          const user = new User({
-            email: email,
-            password: hasedPassword,
-            cart: { item: [] },
-          });
-          return user.save();
-        })
-        .then(() => {
-          res.redirect("/login");
-          // transporter.sendMail({
-          //   from: "sumon25399@gmail.com",
-          //   to: email,
-          //   subject: "Signup succeeded!",
-          //   html: "<h1>You Successfully Signed Up!</h1>",
-          // });
-        });
+  bcrypt
+    .hash(password, 12)
+    .then((hasedPassword) => {
+      const user = new User({
+        email: email,
+        password: hasedPassword,
+        cart: { item: [] },
+      });
+      return user.save();
     })
-    .catch((err) => {
-      console.log(err);
+    .then(() => {
+      res.redirect("/login");
+      // transporter.sendMail({
+      //   from: "sumon25399@gmail.com",
+      //   to: email,
+      //   subject: "Signup succeeded!",
+      //   html: "<h1>You Successfully Signed Up!</h1>",
+      // });
     });
 };
 

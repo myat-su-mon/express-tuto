@@ -29,8 +29,7 @@ router.post(
         if (value === "test@test.com") {
           throw new Error("This email address is forbidden");
         }
-        return true;
-        User.findOne({ email: value }).then((userDoc) => {
+        return User.findOne({ email: value }).then((userDoc) => {
           if (userDoc) {
             return Promise.reject(
               "Email already exists, please pick a different one"
