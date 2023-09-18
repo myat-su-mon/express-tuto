@@ -12,7 +12,10 @@ exports.getProducts = (req, res, next) => {
       });
     })
     .catch((err) => {
-      console.log(err);
+      const error = new Error(err);
+      error.httpStatusCode = 500;
+      console.log(error);
+      return next(error);
     });
 };
 
@@ -39,7 +42,10 @@ exports.getIndex = (req, res, next) => {
       });
     })
     .catch((err) => {
-      console.log(err);
+      const error = new Error(err);
+      error.httpStatusCode = 500;
+      console.log(error);
+      return next(error);
     });
 };
 
