@@ -53,8 +53,13 @@ exports.postAddProduct = (req, res, next) => {
       res.redirect("/admin/products");
     })
     .catch((err) => {
-      console.log("An error occurred.");
-      res.redirect("/500");
+      // console.log("An error occurred.");
+      // res.redirect("/500");
+      // const error = new Error('Creating a product failed.');
+      const error = new Error(err);
+      error.httpStatusCode = 500;
+      console.log(error);
+      return next(error);
     });
 };
 
