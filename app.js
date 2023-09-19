@@ -9,6 +9,7 @@ const csrf = require("csurf");
 const csrfProtection = csrf();
 const flash = require("connect-flash");
 const multer = require("multer");
+const uuidv4 = require("uuid");
 
 const MONGODB_URI =
   "mongodb+srv://root:root@cluster0.j30ddxo.mongodb.net/shop?retryWrites=true&w=majority";
@@ -30,8 +31,17 @@ const adminRoutes = require("./routes/admin");
 const shopRoutes = require("./routes/shop");
 const authRoutes = require("./routes/auth");
 
+const fileStorage = multer.diskStorage({
+  destination: (req, file, cb) => {
+    cb(null, "images");
+  },
+  filename: (req, file, cb) => {
+    cb(null, uuidv4.v4() + "-" + file.originalname);
+  },
+});
+
 app.use(bodyParser.urlencoded({ extended: false }));
-app.use(multer({ dest: "images" }).single("image"));
+app.use(multer({ storage: fileStorage }).single("image"));
 app.use(express.static(path.join(__dirname, "public")));
 app.use(
   session({
