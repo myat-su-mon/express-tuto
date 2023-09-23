@@ -35,8 +35,9 @@ exports.postAddProduct = (req, res, next) => {
   }
 
   const errors = validationResult(req);
+  console.log(errors);
+  console.log(image, "image");
   if (!errors.isEmpty()) {
-    console.log(errors.array());
     return res.status(422).render("admin/edit-product", {
       pageTitle: "Add Product",
       path: "/admin/edit-product",
@@ -65,13 +66,11 @@ exports.postAddProduct = (req, res, next) => {
   product
     .save()
     .then((result) => {
-      console.log("Created Product");
       res.redirect("/admin/products");
     })
     .catch((err) => {
       const error = new Error(err);
       error.httpStatusCode = 500;
-      console.log(error);
       return next(error);
     });
 };
