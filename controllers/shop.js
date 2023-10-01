@@ -140,10 +140,7 @@ exports.getInvoice = (req, res, next) => {
 
       const pdfDoc = new PDFDocument();
       res.setHeader("Content-Type", "application/pdf");
-      res.setHeader(
-        "Content-Disposition",
-        `attachment; filename=${invoiceName}`
-      );
+      res.setHeader("Content-Disposition", `inline; filename=${invoiceName}`);
       pdfDoc.pipe(fs.createWriteStream(invoicePath));
       pdfDoc.pipe(res);
       pdfDoc.text("Hello World");
