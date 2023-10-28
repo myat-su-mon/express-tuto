@@ -1,7 +1,6 @@
 <%- include('../includes/head.ejs') %>
     <link rel="stylesheet" href="/css/product.css">
     </head>
-
     <body>
         <%- include('../includes/navigation.ejs') %>
 
@@ -34,6 +33,14 @@
                                 </div>
                             </article>
                             <% } %>
+                            <%- include('../includes/pagination.ejs', {
+                currentPage: currentPage,
+                hasNextPage: hasNextPage,
+                hasPreviousPage: hasPreviousPage,
+                nextPage: nextPage,
+                previousPage: previousPage,
+                lastPage: lastPage
+            }) %>
                     </div>
                     <% } else { %>
                         <h1>No Products Found!</h1>
